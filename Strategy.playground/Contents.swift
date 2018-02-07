@@ -38,6 +38,8 @@ class Bicycle: Vehicle {
     }
 }
 
+// Use Vehicle v1.0
+
 print("-=First vehicles party=-\n")
 var vehicles = [Car(), Train(), Bicycle()]
 for vehicle in vehicles {
@@ -179,9 +181,9 @@ class PropellerAirplane: ModernizedVehicle {
 
 print("\n\n-=Modernized vehicles=-\n")
 var modernizedVehicles = [ModernizedCar(), ModernizedTrain(), ModernizedBicycle(), PropellerAirplane()]
-for modernizedVehicle in modernizedVehicles {
-    modernizedVehicle.makeNoise()
-    modernizedVehicle.fly()
+for vehicle in modernizedVehicles {
+    vehicle.makeNoise()
+    vehicle.fly()
     print("--------------")
 }
 
@@ -197,4 +199,4 @@ rocketAirplane.makeNoise()
 // We can change behavior of our objects at runtime,
 // just by setting another behavior to properties.
 // And another cool feature - we can add many different behaviors later,
-// without changing exist code. 
+// without changing exist code.

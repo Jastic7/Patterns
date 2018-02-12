@@ -8,9 +8,12 @@
 
 import Foundation
 
-protocol Observer {
+protocol Observer: class {
     var id: String { get set }
+    var source: Observable? { get set }
+   
     func update()
+    func unsubscribe()
 }
 
 protocol Observable {
@@ -29,10 +32,15 @@ class Youtube: Observable {
     
     func add(_ observer: Observer) {
         subscribers.append(observer)
+        observer.source = self
+        
+        print("\(observer.id) has been added to subscribers")
     }
     
     func remove(_ observer: Observer) {
         subscribers = subscribers.filter({ observer.id != $0.id })
+        observer.source = nil
+        print("\(observer.id) has been removed from subscribers")
     }
     
     func notifyAll() {
@@ -42,6 +50,7 @@ class Youtube: Observable {
 
 class Subscriber: Observer {
     var id: String
+    var source: Observable?
     
     init(_ id: String) {
         self.id = id
@@ -50,11 +59,21 @@ class Subscriber: Observer {
     func update() {
         print("\(id) receive notification")
     }
+    
+    func unsubscribe() {
+        source?.remove(self)
+    }
 }
 
 let subscribers = [Subscriber("Bob"), Subscriber("Alexa"), Subscriber("Jack"), Subscriber("Tim")]
 let channel = Youtube(title: "Apple")
-subscribers.forEach { channel.add($0) }
+subscribers.forEach { (subscriber) in
+    channel.add(subscriber)
+}
+channel.notifyAll()
+
+let alexa = subscribers[1]
+alexa.unsubscribe()
 channel.notifyAll()
 
 

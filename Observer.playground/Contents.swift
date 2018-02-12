@@ -9,7 +9,7 @@
 import Foundation
 
 protocol Observer: class {
-    var id: String { get set }
+    var name: String { get set }
     var source: Observable? { get set }
    
     func update(with newContent: MediaContent)
@@ -41,14 +41,14 @@ class Youtube: Observable {
         subscribers.append(observer)
         observer.source = self
         
-        print("\(observer.id) has been subscribed to the '\(name)' channel.")
+        print("\(observer.name) has been subscribed to the '\(name)' channel.")
     }
     
     func remove(_ observer: Observer) {
-        subscribers = subscribers.filter({ observer.id != $0.id })
+        subscribers = subscribers.filter({ observer !== $0 })
         observer.source = nil
         
-        print("\(observer.id) has been removed from subscribers.")
+        print("\(observer.name) has been removed from subscribers.")
     }
     
     func notifyAll() {
@@ -95,15 +95,15 @@ struct Photo: MediaContent {
 }
 
 class Subscriber: Observer {
-    var id: String
+    var name: String
     var source: Observable?
     
-    init(_ id: String) {
-        self.id = id
+    init(_ name: String) {
+        self.name = name
     }
     
     func update(with newContent: MediaContent) {
-        print("|\t\(id) receive notification about new content: '\(newContent.title)'")
+        print("|\t\(name) receive notification about new content: '\(newContent.title)'")
     }
     
     func unsubscribe() {

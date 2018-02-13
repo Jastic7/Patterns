@@ -6,8 +6,24 @@
 //              so that when one object changes state, all of its dependents are notified and updated automatically.
 //              (c) Eric Freeman - Head First Design Patterns
 
+
 import Foundation
 
+protocol MediaContent {
+    var title: String { get set }
+}
+
+struct Video: MediaContent {
+    var title: String
+}
+
+struct Photo: MediaContent {
+    var title: String
+}
+
+// Declare two protocols to construct Observer pattern.
+
+/// Define the contract for listeners of observable subject.
 protocol Observer: class {
     var name: String { get set }
     var source: Observable? { get set }
@@ -16,17 +32,16 @@ protocol Observer: class {
     func unsubscribe()
 }
 
+/// Declare the behavior of subject to which other
+/// listeners will subscribe.
 protocol Observable {
     func add(_ observer: Observer)
     func remove(_ observer: Observer)
     func notifyAll();
 }
 
-protocol MediaContent {
-    var title: String { get set }
-}
 
-class Youtube: Observable {
+class Youtube {
     private var subscribers = [Observer]()
     private var content = [MediaContent]()
     let name: String
@@ -35,8 +50,24 @@ class Youtube: Observable {
         self.name = name
     }
     
-    // Observable
+    func createVideo() {
+        let newTitle = "Cool clip №\(content.count) with <3"
+        content.append(Video(title: newTitle))
+        
+        print("\n\(name): Hey fans, there are new clip: '\(newTitle)' !")
+        notifyAll()
+    }
     
+    func createPhoto() {
+        let newTitle = "Funny photo №\(content.count)"
+        content.append(Photo(title: newTitle))
+        
+        print("\n\(name): Hey fans, there are new photo: '\(newTitle)' !")
+        notifyAll()
+    }
+}
+
+extension Youtube: Observable {
     func add(_ observer: Observer) {
         subscribers.append(observer)
         observer.source = self
@@ -66,33 +97,8 @@ class Youtube: Observable {
         subscribers.forEach { $0.update(with: hotContent) }
         print("------------------------------------------------------------------------------")
     }
-    
-    // Public methods
-    
-    func createVideo() {
-        let newTitle = "Cool clip №\(content.count) with <3"
-        content.append(Video(title: newTitle))
-        
-        print("\n\(name): Hey fans, there are new clip: '\(newTitle)' !")
-        notifyAll()
-    }
-    
-    func createPhoto() {
-        let newTitle = "Funny photo №\(content.count)"
-        content.append(Photo(title: newTitle))
-        
-        print("\n\(name): Hey fans, there are new photo: '\(newTitle)' !")
-        notifyAll()
-    }
 }
 
-struct Video: MediaContent {
-    var title: String
-}
-
-struct Photo: MediaContent {
-    var title: String
-}
 
 class Subscriber: Observer {
     var name: String
@@ -110,6 +116,7 @@ class Subscriber: Observer {
         source?.remove(self)
     }
 }
+
 
 let channel = Youtube(name: "Imagine Dragons")
 let hater = Subscriber("Jacke(hater)")

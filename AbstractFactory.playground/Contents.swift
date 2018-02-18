@@ -6,7 +6,7 @@
 //              or dependent objects without specifying their concrete classes.
 //              (c) Eric Freeman - Head First Design Patterns
 
-
+//Top abstraction level
 class File {
     var title: String
     var fileExtension: String
@@ -20,6 +20,7 @@ class File {
         fileExtension = ""
     }
 }
+
 
 //Microsoft office documents
 
@@ -43,6 +44,7 @@ class ExcelFile: File {
         fileExtension = "xlsx"
     }
 }
+
 
 //Apple office documents
 
@@ -68,12 +70,14 @@ class KeynoteFile: File {
 }
 
 
+/// Abstract Factory. Each concrete factory will implement this protocol.
 protocol OfficeProgram {
     func createTextFile(title: String) -> File
     func createSheetFile(title: String) -> File
     func createPresentationFile(title: String) -> File
 }
 
+/// Concrete factory to creating apple office files.
 class AppleOffice: OfficeProgram {
     func createTextFile(title: String) -> File {
         return PagesFile(title: title)
@@ -88,6 +92,7 @@ class AppleOffice: OfficeProgram {
     }
 }
 
+/// Concrete factory to creating microsoft office files.
 class MicrosoftOffice: OfficeProgram {
     func createTextFile(title: String) -> File {
         return WordFile(title: title)
@@ -107,6 +112,10 @@ enum OperationSystem {
     case windows
 }
 
+// This class abstracts from creation concrete type of files according to operation system.
+// Instead of, creation logic incapsulated in concrete factory (Apple and Microsoft office).
+// It means, that we can add new type of file (for example, old format .doc, or .xls) and our client code in Computer class
+// doesn't change.
 class Computer {
     var office: OfficeProgram
     let operationSystem: OperationSystem
@@ -138,6 +147,10 @@ class Computer {
         documents.forEach { print("- " + $0.fullName) }
     }
 }
+
+
+
+//Usage example
 
 print("MacBook")
 let macBook = Computer(operationSystem: .macOS)

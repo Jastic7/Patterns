@@ -102,22 +102,24 @@ class OperationSystem {
 // That approach allows to abstract at operation system level from concrete file classes and work only with
 // base File class.
 
+var program: Program!
+
 print("User is trying to create text file...")
-let word = Word()
-let letter = word.createFile(title: "My private message", with: "txt")
-sleep(2) // simulate user interaction with system
+program = Word()
+let letter = program.createFile(title: "My private message", with: "txt")
+sleep(1) // simulate user interaction with system
 
 print("User is trying to scan passport")
-let passport = word.createFile(title: "International passport", with: "pdf")
-sleep(3)
+let passport = program.createFile(title: "International passport", with: "pdf")
+sleep(1)
 
 print("Use is trying to record song")
-let garageBand = GarageBand()
-let superHit = garageBand.createFile(title: "Despacito", with: "aac")
+program = GarageBand()
+let superHit = program.createFile(title: "Despacito", with: "aac")
 sleep(1)
 
 print("User is trying to record melody")
-let relaxMelody = garageBand.createFile(title: "Sound of Rain", with: "mp3")
+let relaxMelody = program.createFile(title: "Sound of Rain", with: "mp3")
 
 var files = [letter, passport, superHit, relaxMelody]
 
